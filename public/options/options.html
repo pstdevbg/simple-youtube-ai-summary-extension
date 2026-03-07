@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube AI Summary - Settings</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 24px 0 12px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    textarea {
+      height: 180px;
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 13px;
+      resize: vertical;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .btn-row {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-save {
+      background: #065fd4;
+      color: #fff;
+    }
+    .btn-save:hover { background: #0550b3; }
+    .btn-reset {
+      background: #e5e5e5;
+      color: #333;
+    }
+    .btn-reset:hover { background: #d2d2d2; }
+    #status {
+      font-size: 13px;
+      color: #2e7d32;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+    .placeholders {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .placeholders code {
+      background: #f0f0f0;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube AI Summary - Settings</h1>
+
+  <label for="responseLanguage">Response Language</label>
+  <input type="text" id="responseLanguage" placeholder="English">
+
+  <h2>Transcript Options</h2>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="includeTimestamps">
+    <label for="includeTimestamps">Include timestamps in transcript</label>
+  </div>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="includeSpeakerLabels">
+    <label for="includeSpeakerLabels">Include speaker labels (when available)</label>
+  </div>
+
+  <h2>Prompt Template</h2>
+
+  <div class="placeholders">
+    Available placeholders:
+    <code>{title}</code>
+    <code>{channel}</code>
+    <code>{duration}</code>
+    <code>{url}</code>
+    <code>{transcript}</code>
+    <code>{responseLanguage}</code>
+  </div>
+
+  <textarea id="promptTemplate"></textarea>
+
+  <h2>AI Provider Automation</h2>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="allowAutomation">
+    <label for="allowAutomation">Enable auto-fill on AI sites (requires site permission)</label>
+  </div>
+
+  <div class="hint">
+    When enabled, the extension will ask for permission to access AI sites so it can automatically paste the prompt. Without permission, the prompt is copied to your clipboard and the site is opened for you to paste manually.
+  </div>
+
+  <h2>Auto-Submit Per Provider</h2>
+  <div class="hint">When enabled, the extension will also click the send button after pasting.</div>
+
+  <div class="checkbox-row">
+    <input type="checkbox" id="autoSubmit-chatgpt">
+    <label for="autoSubmit-chatgpt">ChatGPT</label>
+  </div>
+  <div class="checkbox-row">
+    <input type="checkbox" id="autoSubmit-claude">
+    <label for="autoSubmit-claude">Claude</label>
+  </div>
+  <div class="checkbox-row">
+    <input type="checkbox" id="autoSubmit-gemini">
+    <label for="autoSubmit-gemini">Gemini</label>
+  </div>
+  <div class="checkbox-row">
+    <input type="checkbox" id="autoSubmit-deepseek">
+    <label for="autoSubmit-deepseek">DeepSeek</label>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-save" id="save">Save Settings</button>
+    <button class="btn-reset" id="reset">Reset to Defaults</button>
+  </div>
+
+  <div id="status"></div>
+
+  <script src="../options/index.js"></script>
+</body>
+</html>

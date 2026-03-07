@@ -1,0 +1,156 @@
+#yt-ai-summary-panel {
+  background: var(--yt-spec-badge-chip-background, #f2f2f2);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  padding: 0;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: 14px;
+  color: var(--yt-spec-text-primary, #0f0f0f);
+  overflow: hidden;
+}
+
+html[dark] #yt-ai-summary-panel,
+[dark] #yt-ai-summary-panel {
+  background: var(--yt-spec-badge-chip-background, #272727);
+  color: var(--yt-spec-text-primary, #f1f1f1);
+}
+
+.yas-header {
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--yt-spec-10-percent-layer, rgba(0, 0, 0, 0.1));
+}
+
+html[dark] .yas-header,
+[dark] .yas-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.yas-body {
+  padding: 12px 16px 16px;
+}
+
+.yas-loading {
+  color: var(--yt-spec-text-secondary, #606060);
+  padding: 8px 0;
+}
+
+.yas-error {
+  color: #c00;
+  padding: 8px 0;
+  line-height: 1.4;
+}
+
+html[dark] .yas-error,
+[dark] .yas-error {
+  color: #f77;
+}
+
+.yas-info {
+  color: var(--yt-spec-text-secondary, #606060);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.yas-warning {
+  background: #fff3cd;
+  color: #856404;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+html[dark] .yas-warning,
+[dark] .yas-warning {
+  background: #433a1f;
+  color: #ffd54f;
+}
+
+.yas-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.yas-provider-row {
+  margin-top: 4px;
+}
+
+.yas-btn {
+  background: var(--yt-spec-badge-chip-background, #e5e5e5);
+  color: var(--yt-spec-text-primary, #0f0f0f);
+  border: none;
+  border-radius: 18px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.yas-btn:hover {
+  background: var(--yt-spec-button-chip-background-hover, #d2d2d2);
+}
+
+.yas-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+html[dark] .yas-btn,
+[dark] .yas-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--yt-spec-text-primary, #f1f1f1);
+}
+
+html[dark] .yas-btn:hover,
+[dark] .yas-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.yas-provider-btn {
+  background: #065fd4;
+  color: #fff;
+}
+
+.yas-provider-btn:hover {
+  background: #0550b3;
+}
+
+html[dark] .yas-provider-btn,
+[dark] .yas-provider-btn {
+  background: #3ea6ff;
+  color: #0f0f0f;
+}
+
+html[dark] .yas-provider-btn:hover,
+[dark] .yas-provider-btn:hover {
+  background: #65b8ff;
+}
+
+.yas-chunk-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.yas-chunk-label {
+  font-size: 12px;
+  color: var(--yt-spec-text-secondary, #606060);
+  margin-right: 4px;
+}
+
+.yas-status {
+  font-size: 12px;
+  color: var(--yt-spec-text-secondary, #606060);
+  margin-top: 8px;
+  min-height: 16px;
+  line-height: 1.4;
+}
