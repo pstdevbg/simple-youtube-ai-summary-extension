@@ -90,6 +90,81 @@
       margin-top: 10px;
       min-height: 20px;
     }
+    .lang-dropdown {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .lang-selected {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .lang-selected:hover {
+      border-color: #999;
+    }
+    .lang-selected::after {
+      content: "\25BC";
+      font-size: 10px;
+      color: #666;
+    }
+    .lang-panel {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 2px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      z-index: 100;
+      max-height: 280px;
+      overflow: hidden;
+      flex-direction: column;
+    }
+    .lang-panel.open {
+      display: flex;
+    }
+    .lang-search {
+      padding: 8px 10px;
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+    .lang-list {
+      overflow-y: auto;
+      max-height: 240px;
+    }
+    .lang-option {
+      padding: 7px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .lang-option:hover,
+    .lang-option.highlighted {
+      background: #e8f0fe;
+    }
+    .lang-option.selected {
+      font-weight: 600;
+      color: #065fd4;
+    }
+    .lang-no-results {
+      padding: 10px 12px;
+      color: #999;
+      font-size: 13px;
+    }
     .placeholders {
       font-size: 12px;
       color: #555;
@@ -105,8 +180,15 @@
 <body>
   <h1>YouTube AI Summary - Settings</h1>
 
-  <label for="responseLanguage">Response Language</label>
-  <input type="text" id="responseLanguage" placeholder="English">
+  <label>Response Language</label>
+  <div class="lang-dropdown" id="langDropdown">
+    <div class="lang-selected" id="langSelected">English</div>
+    <div class="lang-panel" id="langPanel">
+      <input type="text" class="lang-search" id="langSearch" placeholder="Search languages...">
+      <div class="lang-list" id="langList"></div>
+    </div>
+  </div>
+  <input type="hidden" id="responseLanguage">
 
   <h2>Transcript Options</h2>
 

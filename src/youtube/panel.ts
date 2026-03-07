@@ -46,7 +46,20 @@ export function renderPanel(
 
   const header = document.createElement("div");
   header.className = "yas-header";
-  header.textContent = "AI Summary";
+
+  const headerTitle = document.createElement("span");
+  headerTitle.textContent = "AI Summary";
+  header.appendChild(headerTitle);
+
+  const settingsBtn = document.createElement("button");
+  settingsBtn.className = "yas-settings-btn";
+  settingsBtn.title = "Settings";
+  settingsBtn.innerHTML = "&#9881;";
+  settingsBtn.addEventListener("click", () => {
+    chrome.runtime.sendMessage({ type: "OPEN_OPTIONS" });
+  });
+  header.appendChild(settingsBtn);
+
   panel.appendChild(header);
 
   const body = document.createElement("div");
@@ -68,9 +81,11 @@ export function renderPanel(
 }
 
 function insertPanel(panel: HTMLElement) {
-  const secondary = document.querySelector("#secondary, #secondary-inner");
-  if (secondary) {
-    secondary.insertBefore(panel, secondary.firstChild);
+  const target =
+    document.querySelector("#secondary-inner") ??
+    document.querySelector("#secondary");
+  if (target) {
+    target.insertBefore(panel, target.firstChild);
   }
 }
 
