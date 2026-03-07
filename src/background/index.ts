@@ -2,9 +2,13 @@ import { OpenProviderMessage, ProviderResultMessage, AutomationRequest, Automati
 import { PROVIDERS } from "../shared/providers";
 
 chrome.runtime.onMessage.addListener(
-  (message: OpenProviderMessage, _sender, sendResponse) => {
+  (message: OpenProviderMessage | { type: string }, _sender, sendResponse) => {
+    if (message.type === "OPEN_OPTIONS") {
+      chrome.runtime.openOptionsPage();
+      return false;
+    }
     if (message.type !== "OPEN_PROVIDER") return false;
-    handleOpenProvider(message).then(sendResponse);
+    handleOpenProvider(message as OpenProviderMessage).then(sendResponse);
     return true; // async response
   }
 );
