@@ -7,28 +7,34 @@ interface CaptionTrack {
   name?: { simpleText?: string };
 }
 
-function getPlayerResponse(): any | null {
-  const scripts = document.querySelectorAll("script");
-  for (const script of scripts) {
-    const text = script.textContent ?? "";
-    const match = text.match(
-      /ytInitialPlayerResponse\s*=\s*(\{.+?\});/s
-    );
-    if (match) {
-      try {
-        return JSON.parse(match[1]);
-      } catch {
-        // continue
-      }
-    }
-  }
+function getVideoId(): string | null {
+  return new URLSearchParams(window.location.search).get("v");
+}
 
-  // Fallback: try window variable
-  try {
-    return (window as any).ytInitialPlayerResponse ?? null;
-  } catch {
-    return null;
-  }
+async function fetchPlayerResponse(): Promise<any> {
+  const videoId = getVideoId();
+  if (!videoId) throw new Error("No video ID found in URL.");
+
+  // Use YouTube's Innertube API — works reliably on SPA navigation
+  const res = await fetch(
+    "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        context: {
+          client: {
+            clientName: "WEB",
+            clientVersion: "2.20240101.00.00",
+          },
+        },
+        videoId,
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error(`Innertube player request failed: ${res.status}`);
+  return res.json();
 }
 
 function getCaptionTracks(playerResponse: any): CaptionTrack[] {
@@ -114,12 +120,7 @@ async function fetchTimedTextXml(
 }
 
 export async function extractTranscript(): Promise<TranscriptSegment[]> {
-  const playerResponse = getPlayerResponse();
-  if (!playerResponse) {
-    throw new Error(
-      "Could not find video data. Try refreshing the page."
-    );
-  }
+  const playerResponse = await fetchPlayerResponse();
 
   const tracks = getCaptionTracks(playerResponse);
   if (tracks.length === 0) {

@@ -5,6 +5,7 @@ import { chunkTranscript, needsChunking, ChunkInfo } from "../shared/chunking";
 import { loadSettings } from "../shared/storage";
 
 const PANEL_ID = "yt-ai-summary-panel";
+let pendingObserver: MutationObserver | null = null;
 
 async function copyToClipboard(text: string): Promise<boolean> {
   try {
@@ -26,6 +27,10 @@ function flashButton(btn: HTMLButtonElement, text: string) {
 }
 
 export function removePanel() {
+  if (pendingObserver) {
+    pendingObserver.disconnect();
+    pendingObserver = null;
+  }
   document.getElementById(PANEL_ID)?.remove();
 }
 
@@ -86,7 +91,31 @@ function insertPanel(panel: HTMLElement) {
     document.querySelector("#secondary");
   if (target) {
     target.insertBefore(panel, target.firstChild);
+    return;
   }
+
+  // Sidebar not in DOM yet — wait for it
+  if (pendingObserver) pendingObserver.disconnect();
+  const observer = new MutationObserver((_mutations, obs) => {
+    const el =
+      document.querySelector("#secondary-inner") ??
+      document.querySelector("#secondary");
+    if (el) {
+      obs.disconnect();
+      pendingObserver = null;
+      // Panel may have been replaced by a newer render — only insert if it's still current
+      if (panel.id !== PANEL_ID || document.getElementById(PANEL_ID)) return;
+      el.insertBefore(panel, el.firstChild);
+    }
+  });
+  pendingObserver = observer;
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Give up after 10s
+  setTimeout(() => {
+    observer.disconnect();
+    if (pendingObserver === observer) pendingObserver = null;
+  }, 10000);
 }
 
 async function renderReadyState(

@@ -19,9 +19,6 @@ async function onVideoPage() {
 
   renderPanel({ kind: "loading" });
 
-  // Small delay to let YouTube hydrate page data
-  await new Promise((r) => setTimeout(r, 1500));
-
   try {
     const [segments, meta] = await Promise.all([
       extractTranscript(),
