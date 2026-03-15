@@ -1,20 +1,13 @@
-export type ProviderId = "chatgpt" | "claude" | "gemini" | "deepseek";
+export type ProviderId = "gemini";
 
 export interface Settings {
   promptTemplate: string;
   responseLanguage: string;
-  includeTimestamps: boolean;
-  includeSpeakerLabels: boolean;
   allowAutomation: boolean;
   autoSubmit: Record<ProviderId, boolean>;
 }
 
-export interface TranscriptSegment {
-  text: string;
-  startMs: number;
-  durationMs: number;
-  speaker?: string;
-}
+
 
 export interface VideoMeta {
   title: string;
@@ -25,7 +18,6 @@ export interface VideoMeta {
 
 export interface PromptPayload {
   meta: VideoMeta;
-  transcript: TranscriptSegment[];
   settings: Settings;
 }
 

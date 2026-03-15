@@ -116,8 +116,6 @@ function initLanguageDropdown(initialValue: string) {
 async function load() {
   const s = await loadSettings();
   initLanguageDropdown(s.responseLanguage);
-  $<HTMLInputElement>("includeTimestamps").checked = s.includeTimestamps;
-  $<HTMLInputElement>("includeSpeakerLabels").checked = s.includeSpeakerLabels;
   $<HTMLTextAreaElement>("promptTemplate").value = s.promptTemplate;
   $<HTMLInputElement>("allowAutomation").checked = s.allowAutomation;
 
@@ -134,8 +132,6 @@ async function save() {
 
   await saveSettings({
     responseLanguage: $<HTMLInputElement>("responseLanguage").value.trim() || "English",
-    includeTimestamps: $<HTMLInputElement>("includeTimestamps").checked,
-    includeSpeakerLabels: $<HTMLInputElement>("includeSpeakerLabels").checked,
     promptTemplate: $<HTMLTextAreaElement>("promptTemplate").value,
     allowAutomation: $<HTMLInputElement>("allowAutomation").checked,
     autoSubmit,
@@ -151,8 +147,6 @@ async function reset() {
   // Re-init the dropdown with default value
   $("langSelected").textContent = DEFAULT_SETTINGS.responseLanguage;
   $<HTMLInputElement>("responseLanguage").value = DEFAULT_SETTINGS.responseLanguage;
-  $<HTMLInputElement>("includeTimestamps").checked = DEFAULT_SETTINGS.includeTimestamps;
-  $<HTMLInputElement>("includeSpeakerLabels").checked = DEFAULT_SETTINGS.includeSpeakerLabels;
   $<HTMLTextAreaElement>("promptTemplate").value = DEFAULT_SETTINGS.promptTemplate;
   $<HTMLInputElement>("allowAutomation").checked = DEFAULT_SETTINGS.allowAutomation;
   for (const id of PROVIDER_IDS) {

@@ -3,22 +3,31 @@
   "name": "YouTube AI Summary",
   "version": "1.0.0",
   "description": "Extract YouTube transcripts and send them to AI providers for summarization.",
-  "permissions": ["storage", "activeTab", "scripting"],
-  "host_permissions": ["https://www.youtube.com/*"],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
   "optional_host_permissions": [
-    "https://chatgpt.com/*",
-    "https://claude.ai/*",
-    "https://gemini.google.com/*",
-    "https://chat.deepseek.com/*"
+    "https://gemini.google.com/*"
   ],
   "background": {
     "service_worker": "background/index.js"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["youtube/index.js"],
-      "css": ["youtube/panel.css"],
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "youtube/index.js"
+      ],
+      "css": [
+        "youtube/panel.css"
+      ],
       "run_at": "document_idle"
     }
   ],

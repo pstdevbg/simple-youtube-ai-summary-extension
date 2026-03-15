@@ -1,4 +1,4 @@
-import { extractTranscript, extractVideoMeta } from "./transcript";
+import { extractVideoMeta } from "./transcript";
 import { renderPanel, removePanel } from "./panel";
 
 let currentVideoId: string | null = null;
@@ -17,18 +17,14 @@ async function onVideoPage() {
   if (!videoId || videoId === currentVideoId) return;
   currentVideoId = videoId;
 
-  renderPanel({ kind: "loading" });
-
+  // We don't need to load transcript anymore, just metadata
   try {
-    const [segments, meta] = await Promise.all([
-      extractTranscript(),
-      Promise.resolve(extractVideoMeta()),
-    ]);
-    renderPanel({ kind: "ready", meta, segments });
+    const meta = extractVideoMeta();
+    renderPanel({ kind: "ready", meta });
   } catch (err: any) {
     renderPanel({
       kind: "error",
-      message: err?.message ?? "Failed to extract transcript.",
+      message: err?.message ?? "Failed to get video info.",
     });
   }
 }

@@ -190,18 +190,6 @@
   </div>
   <input type="hidden" id="responseLanguage">
 
-  <h2>Transcript Options</h2>
-
-  <div class="checkbox-row">
-    <input type="checkbox" id="includeTimestamps">
-    <label for="includeTimestamps">Include timestamps in transcript</label>
-  </div>
-
-  <div class="checkbox-row">
-    <input type="checkbox" id="includeSpeakerLabels">
-    <label for="includeSpeakerLabels">Include speaker labels (when available)</label>
-  </div>
-
   <h2>Prompt Template</h2>
 
   <div class="placeholders">
@@ -210,7 +198,6 @@
     <code>{channel}</code>
     <code>{duration}</code>
     <code>{url}</code>
-    <code>{transcript}</code>
     <code>{responseLanguage}</code>
   </div>
 
@@ -227,24 +214,12 @@
     When enabled, the extension will ask for permission to access AI sites so it can automatically paste the prompt. Without permission, the prompt is copied to your clipboard and the site is opened for you to paste manually.
   </div>
 
-  <h2>Auto-Submit Per Provider</h2>
+  <h2>Auto-Submit</h2>
   <div class="hint">When enabled, the extension will also click the send button after pasting.</div>
 
   <div class="checkbox-row">
-    <input type="checkbox" id="autoSubmit-chatgpt">
-    <label for="autoSubmit-chatgpt">ChatGPT</label>
-  </div>
-  <div class="checkbox-row">
-    <input type="checkbox" id="autoSubmit-claude">
-    <label for="autoSubmit-claude">Claude</label>
-  </div>
-  <div class="checkbox-row">
     <input type="checkbox" id="autoSubmit-gemini">
     <label for="autoSubmit-gemini">Gemini</label>
-  </div>
-  <div class="checkbox-row">
-    <input type="checkbox" id="autoSubmit-deepseek">
-    <label for="autoSubmit-deepseek">DeepSeek</label>
   </div>
 
   <div class="btn-row">

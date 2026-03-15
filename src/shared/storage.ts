@@ -1,28 +1,13 @@
 import { Settings } from "./types";
 
-export const DEFAULT_PROMPT_TEMPLATE = `You are given a YouTube video transcript in its original language.
-
-Summarize the video in {responseLanguage}.
-
-Video title: {title}
-Channel: {channel}
-Duration: {duration}
-URL: {url}
-
-Transcript:
-{transcript}`;
+export const DEFAULT_PROMPT_TEMPLATE = `Extract the transcript of this YouTube video from the following URL: {url} and summarize it in {responseLanguage}. Extract key points with timestamps.`;
 
 export const DEFAULT_SETTINGS: Settings = {
   promptTemplate: DEFAULT_PROMPT_TEMPLATE,
   responseLanguage: "English",
-  includeTimestamps: false,
-  includeSpeakerLabels: false,
   allowAutomation: true,
   autoSubmit: {
-    chatgpt: false,
-    claude: false,
     gemini: false,
-    deepseek: false,
   },
 };
 
