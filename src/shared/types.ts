@@ -16,8 +16,14 @@ export interface VideoMeta {
   url: string;
 }
 
+export interface TranscriptSegment {
+  timestamp?: string;
+  text: string;
+}
+
 export interface PromptPayload {
   meta: VideoMeta;
+  transcript: string;
   settings: Settings;
 }
 

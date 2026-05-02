@@ -1,6 +1,14 @@
 import { Settings } from "./types";
 
-export const DEFAULT_PROMPT_TEMPLATE = `Extract the transcript of this YouTube video from the following URL: {url} and summarize it in {responseLanguage}. Extract key points with timestamps.`;
+export const DEFAULT_PROMPT_TEMPLATE = `Summarize this YouTube video in {responseLanguage}. Extract key points with timestamps.
+
+Title: {title}
+Channel: {channel}
+Duration: {duration}
+URL: {url}
+
+Transcript:
+{transcript}`;
 
 export const DEFAULT_SETTINGS: Settings = {
   promptTemplate: DEFAULT_PROMPT_TEMPLATE,

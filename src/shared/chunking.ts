@@ -13,7 +13,7 @@ export function estimatePromptLength(
   segments: TranscriptSegment[],
   settings: Settings
 ): number {
-  return buildPrompt(meta, segments, settings).length;
+  return buildPrompt(meta, settings, formatTranscript(segments)).length;
 }
 
 export function needsChunking(
@@ -31,13 +31,8 @@ export function chunkTranscript(
   settings: Settings,
   provider: ProviderDef
 ): ChunkInfo[] {
-  const fullTranscript = formatTranscript(segments, settings);
-  const templateWithoutTranscript = buildPrompt(
-    meta,
-    [],
-    settings,
-    ""
-  );
+  const fullTranscript = formatTranscript(segments);
+  const templateWithoutTranscript = buildPrompt(meta, settings, "");
   const overhead = templateWithoutTranscript.length + 200;
   const chunkSize = Math.max(provider.maxChars - overhead, 1000);
 
@@ -70,7 +65,7 @@ export function chunkTranscript(
     return {
       chunkIndex: i,
       totalChunks,
-      prompt: buildPrompt(meta, segments, settings, transcript),
+      prompt: buildPrompt(meta, settings, transcript),
     };
   });
 }

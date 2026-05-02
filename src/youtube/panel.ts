@@ -1,7 +1,8 @@
 import { VideoMeta, Settings, ProviderId, ProviderResultMessage } from "../shared/types";
 import { PROVIDERS, PROVIDER_IDS } from "../shared/providers";
-import { buildPrompt } from "../shared/prompt";
+import { buildPrompt, formatTranscript } from "../shared/prompt";
 import { loadSettings } from "../shared/storage";
+import { extractTranscript } from "./transcript";
 
 const PANEL_ID = "yt-ai-summary-panel";
 let pendingObserver: MutationObserver | null = null;
@@ -118,17 +119,55 @@ async function renderReadyState(
   meta: VideoMeta
 ) {
   const settings = await loadSettings();
-  const prompt = buildPrompt(meta, settings);
+  let transcriptPromise: Promise<string> | null = null;
 
   // Copy buttons row
   const copyRow = document.createElement("div");
   copyRow.className = "yas-btn-row";
 
-  const copyPromptBtn = createButton("Copy Prompt", async (btn) => {
-    const ok = await copyToClipboard(prompt);
-    flashButton(btn, ok ? "Copied!" : "Failed");
+  const status = document.createElement("div");
+  status.className = "yas-status";
+  status.id = "yas-status";
+
+  const getTranscriptText = async () => {
+    if (!transcriptPromise) {
+      status.textContent = "Opening YouTube transcript...";
+      transcriptPromise = extractTranscript().then((segments) => {
+        const transcript = formatTranscript(segments);
+        status.textContent = `Transcript loaded (${segments.length} segments).`;
+        return transcript;
+      }).catch((err) => {
+        transcriptPromise = null;
+        throw err;
+      });
+    }
+    return transcriptPromise;
+  };
+
+  const copyTranscriptBtn = createButton("Copy Transcript", async (btn) => {
+    try {
+      const transcript = await getTranscriptText();
+      const ok = await copyToClipboard(transcript);
+      flashButton(btn, ok ? "Copied!" : "Failed");
+    } catch (err: any) {
+      status.textContent = err?.message ?? "Failed to load transcript.";
+      flashButton(btn, "Failed");
+    }
   });
 
+  const copyPromptBtn = createButton("Copy Prompt", async (btn) => {
+    try {
+      const transcript = await getTranscriptText();
+      const prompt = buildPrompt(meta, settings, transcript);
+      const ok = await copyToClipboard(prompt);
+      flashButton(btn, ok ? "Copied!" : "Failed");
+    } catch (err: any) {
+      status.textContent = err?.message ?? "Failed to load transcript.";
+      flashButton(btn, "Failed");
+    }
+  });
+
+  copyRow.appendChild(copyTranscriptBtn);
   copyRow.appendChild(copyPromptBtn);
   body.appendChild(copyRow);
 
@@ -139,13 +178,20 @@ async function renderReadyState(
   for (const id of PROVIDER_IDS) {
     const provider = PROVIDERS[id];
     const btn = createButton(`Summarize with ${provider.label}`, async (btn) => {
-      const ok = await copyToClipboard(prompt);
-      if (!ok) {
-        flashButton(btn, "Copy failed");
-        return;
+      try {
+        const transcript = await getTranscriptText();
+        const prompt = buildPrompt(meta, settings, transcript);
+        const ok = await copyToClipboard(prompt);
+        if (!ok) {
+          flashButton(btn, "Copy failed");
+          return;
+        }
+        flashButton(btn, "Copied! Opening...");
+        sendToProvider(id, prompt, settings);
+      } catch (err: any) {
+        status.textContent = err?.message ?? "Failed to load transcript.";
+        flashButton(btn, "Failed");
       }
-      flashButton(btn, "Copied! Opening...");
-      sendToProvider(id, prompt, settings);
     });
     btn.classList.add("yas-provider-btn", `yas-provider-${id}`);
     provRow.appendChild(btn);
@@ -153,10 +199,6 @@ async function renderReadyState(
 
   body.appendChild(provRow);
 
-  // Status area
-  const status = document.createElement("div");
-  status.className = "yas-status";
-  status.id = "yas-status";
   body.appendChild(status);
 }
 
