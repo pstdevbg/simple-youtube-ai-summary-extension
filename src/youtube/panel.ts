@@ -212,6 +212,7 @@ function sendToProvider(
       type: "OPEN_PROVIDER",
       providerId,
       prompt,
+      allowAutomation: settings.allowAutomation,
       autoSubmit: settings.autoSubmit[providerId],
     },
     (response?: ProviderResultMessage) => {

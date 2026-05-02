@@ -12,7 +12,11 @@
     "https://www.youtube.com/*"
   ],
   "optional_host_permissions": [
-    "https://gemini.google.com/*"
+    "https://chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://chat.deepseek.com/*",
+    "https://grok.com/*"
   ],
   "background": {
     "service_worker": "background/index.js"

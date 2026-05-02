@@ -19,14 +19,11 @@ async function handleOpenProvider(
   const { providerId, prompt, autoSubmit } = message;
   const provider = PROVIDERS[providerId];
 
-  // Open the provider tab
+  const hasPermission = message.allowAutomation
+    ? await ensureProviderPermission(provider.origin)
+    : false;
+
   const tab = await chrome.tabs.create({ url: provider.url });
-
-  // Check if we have host permission for automation
-  const hasPermission = await chrome.permissions
-    .contains({ origins: [provider.origin] })
-    .catch(() => false);
-
   if (!hasPermission) {
     return { type: "PROVIDER_RESULT", providerId, status: "no-permission" };
   }
@@ -52,6 +49,18 @@ async function handleOpenProvider(
 
     chrome.tabs.onUpdated.addListener(onUpdated);
   });
+}
+
+async function ensureProviderPermission(origin: string): Promise<boolean> {
+  const wasGranted = await chrome.permissions
+    .request({ origins: [origin] })
+    .catch(() => false);
+
+  if (wasGranted) return true;
+
+  return chrome.permissions
+    .contains({ origins: [origin] })
+    .catch(() => false);
 }
 
 async function injectAndAutomate(

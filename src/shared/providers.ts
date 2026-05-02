@@ -9,6 +9,20 @@ export interface ProviderDef {
 }
 
 export const PROVIDERS: Record<ProviderId, ProviderDef> = {
+  chatgpt: {
+    id: "chatgpt",
+    label: "ChatGPT",
+    url: "https://chatgpt.com/",
+    origin: "https://chatgpt.com/*",
+    maxChars: 120000,
+  },
+  claude: {
+    id: "claude",
+    label: "Claude",
+    url: "https://claude.ai/new",
+    origin: "https://claude.ai/*",
+    maxChars: 180000,
+  },
   gemini: {
     id: "gemini",
     label: "Gemini",
@@ -16,8 +30,26 @@ export const PROVIDERS: Record<ProviderId, ProviderDef> = {
     origin: "https://gemini.google.com/*",
     maxChars: 90000,
   },
+  deepseek: {
+    id: "deepseek",
+    label: "DeepSeek",
+    url: "https://chat.deepseek.com/",
+    origin: "https://chat.deepseek.com/*",
+    maxChars: 120000,
+  },
+  grok: {
+    id: "grok",
+    label: "Grok",
+    url: "https://grok.com/",
+    origin: "https://grok.com/*",
+    maxChars: 120000,
+  },
 };
 
 export const PROVIDER_IDS: ProviderId[] = [
+  "chatgpt",
+  "claude",
   "gemini",
+  "deepseek",
+  "grok",
 ];

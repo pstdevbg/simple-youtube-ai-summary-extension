@@ -15,13 +15,25 @@ export const DEFAULT_SETTINGS: Settings = {
   responseLanguage: "English",
   allowAutomation: true,
   autoSubmit: {
+    chatgpt: false,
+    claude: false,
     gemini: false,
+    deepseek: false,
+    grok: false,
   },
 };
 
 export async function loadSettings(): Promise<Settings> {
   const stored = await chrome.storage.sync.get(DEFAULT_SETTINGS as unknown as Record<string, unknown>);
-  return stored as unknown as Settings;
+  const settings = stored as unknown as Settings;
+  return {
+    ...DEFAULT_SETTINGS,
+    ...settings,
+    autoSubmit: {
+      ...DEFAULT_SETTINGS.autoSubmit,
+      ...settings.autoSubmit,
+    },
+  };
 }
 
 export async function saveSettings(settings: Partial<Settings>): Promise<void> {

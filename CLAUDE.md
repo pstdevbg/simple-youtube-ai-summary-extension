@@ -15,27 +15,27 @@ To load the extension: `chrome://extensions` → enable Developer mode → "Load
 
 ## Architecture
 
-This is a Manifest V3 Chromium extension with **no framework, no bundler config beyond `build.mjs`, and no backend**. All four runtime contexts are bundled as separate IIFEs by esbuild and emitted into `dist/`:
+This is a Manifest V3 Chromium extension with **no framework, no bundler config beyond `build.mjs`, and no backend**. Runtime contexts are bundled as separate IIFEs by esbuild and emitted into `dist/`:
 
 | Entry point (in `build.mjs`)  | Runs in                                  | Loaded by                                              |
 | ----------------------------- | ---------------------------------------- | ------------------------------------------------------ |
 | `src/youtube/index.ts`        | Content script on `https://www.youtube.com/*` | `manifest.json` `content_scripts`                      |
 | `src/background/index.ts`     | Service worker                           | `manifest.json` `background.service_worker`            |
 | `src/options/index.ts`        | Options page                             | `public/options/options.html`                          |
-| `src/ai/gemini.ts`            | Injected into the Gemini tab on demand   | `chrome.scripting.executeScript` from background       |
+| `src/ai/<provider>.ts`        | Injected into the AI provider tab on demand | `chrome.scripting.executeScript` from background    |
 
 **Adding a new entry point requires editing `build.mjs`** — there is no glob.
 
 ### The provider abstraction
 
-There is a generic provider system (`src/shared/providers.ts`, `ProviderId` in `types.ts`, `PROVIDER_IDS` iteration in panel/options), but **only `gemini` is currently wired up**. The recent commit "Rework it to use only Gemini" removed the other providers from the active set. Stale adapters (`src/ai/chatgpt.ts`, `claude.ts`, `deepseek.ts`) still exist on disk but are not built and not referenced — treat them as dead code unless re-introducing multi-provider support.
+There is a generic provider system (`src/shared/providers.ts`, `ProviderId` in `types.ts`, `PROVIDER_IDS` iteration in panel/options). The active providers are ChatGPT, Claude, Gemini, DeepSeek, and Grok. Each provider needs a `src/ai/<id>.ts` adapter because provider UIs use different input and submit button markup.
 
-To add a new provider you must touch all of: `ProviderId` union (`types.ts`), `PROVIDERS` map and `PROVIDER_IDS` (`providers.ts`), `DEFAULT_SETTINGS.autoSubmit` (`storage.ts`), the `optional_host_permissions` array in `public/manifest.json`, the options HTML (a new `autoSubmit-<id>` checkbox), `build.mjs` entry points, and a new `src/ai/<id>.ts` adapter that listens for `AUTOMATION_REQUEST` messages.
+To add another provider you must touch all of: `ProviderId` union (`types.ts`), `PROVIDERS` map and `PROVIDER_IDS` (`providers.ts`), `DEFAULT_SETTINGS.autoSubmit` (`storage.ts`), the `optional_host_permissions` array in `public/manifest.json`, the options HTML (a new `autoSubmit-<id>` checkbox), `build.mjs` entry points, and a new `src/ai/<id>.ts` adapter that listens for `AUTOMATION_REQUEST` messages.
 
-### Message flow for "Summarize with Gemini"
+### Message flow for "Summarize with <provider>"
 
 1. Content script (`youtube/panel.ts`) builds the prompt and `chrome.runtime.sendMessage({ type: "OPEN_PROVIDER", ... })`.
-2. Background (`background/index.ts`) opens the provider tab, checks for the optional host permission, waits for `tabs.onUpdated` `complete`, then `chrome.scripting.executeScript({ files: ["ai/gemini.js"] })`.
+2. Background (`background/index.ts`) requests/checks the optional host permission when automation is enabled, opens the provider tab, waits for `tabs.onUpdated` `complete`, then `chrome.scripting.executeScript({ files: ["ai/<provider>.js"] })`.
 3. The injected adapter receives `AUTOMATION_REQUEST` via `chrome.runtime.onMessage`, finds the contenteditable input, injects text + dispatches `input`/`change` events, optionally clicks send, and returns an `AutomationStatus`.
 4. Background relays the result back to the panel via the original `sendMessage` callback.
 

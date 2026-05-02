@@ -1,4 +1,4 @@
-export type ProviderId = "gemini";
+export type ProviderId = "chatgpt" | "claude" | "gemini" | "deepseek" | "grok";
 
 export interface Settings {
   promptTemplate: string;
@@ -48,6 +48,7 @@ export interface OpenProviderMessage {
   type: "OPEN_PROVIDER";
   providerId: ProviderId;
   prompt: string;
+  allowAutomation: boolean;
   autoSubmit: boolean;
 }
 

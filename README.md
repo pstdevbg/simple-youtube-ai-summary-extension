@@ -8,7 +8,7 @@ A Chromium extension that extracts YouTube video transcripts and sends them to A
 - Extracts transcripts automatically (no need to open YouTube's transcript panel)
 - Prefers manual captions over auto-generated when both exist
 - Copy transcript or the full AI prompt to clipboard
-- Send prompts directly to ChatGPT, Claude, Gemini, or DeepSeek
+- Send prompts directly to ChatGPT, Claude, Gemini, DeepSeek, or Grok
 - Optional auto-fill and auto-submit on AI sites (requires granting site permission)
 - Automatic chunking for long transcripts that exceed provider limits
 - Customizable prompt template with placeholders
@@ -51,6 +51,7 @@ src/
     claude.ts       Claude automation adapter
     gemini.ts       Gemini automation adapter
     deepseek.ts     DeepSeek automation adapter
+    grok.ts         Grok automation adapter
   background/
     index.ts        Tab management, permissions, script injection
   options/
@@ -82,6 +83,7 @@ public/
 - `https://claude.ai/*`
 - `https://gemini.google.com/*`
 - `https://chat.deepseek.com/*`
+- `https://grok.com/*`
 
 Optional permissions enable auto-fill on AI sites. Without them, the extension still works via copy-to-clipboard.
 
